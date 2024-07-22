@@ -5,13 +5,6 @@ const getState = ({ getStore, setStore }) => {
         // return response.json();
     };
 
-    // Centralized function to refresh contacts
-    // const refreshContacts = () => {
-    //     fetch("https://playground.4geeks.com/contact/agendas/yjlmotley/contacts")
-    //         .then(handleResponse)
-    //         .then((data) => setStore({ contacts: data }))
-    //         .catch((error) => console.error('Fetching contacts failed:', error));
-    // };
     const refreshContacts = () => {
         fetch("https://playground.4geeks.com/contact/agendas/yjlmotley/contacts")
             .then(handleResponse)
@@ -25,15 +18,35 @@ const getState = ({ getStore, setStore }) => {
                     setStore({ contacts: [] });
                 }
             })
-            .catch((error) => console.error('Fetching contacts failed:', error));
+            .catch((error) => {
+                console.error('Fetching contacts failed:', error);
+                addAgendaSlug();
+            });
     };
+    
+
+    const addAgendaSlug = () => {
+        fetch('https://playground.4geeks.com/contact/agendas/yjlmotley', {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({}),
+        })
+            .then(handleResponse)
+            .then((data) => {
+                console.log("Agenda added successfully:", data);
+                refreshContacts();
+            })
+            .catch((error) => console.error('Adding agenda slug failed:', error));
+    };
+
 
     return {
         store: {
             contacts: [],
         },
+
         actions: {
-            getContacts: refreshContacts, 
+            getContacts: refreshContacts,
 
             addContacts: (contactData) => {
                 fetch("https://playground.4geeks.com/contact/agendas/yjlmotley/contacts", {
@@ -41,18 +54,18 @@ const getState = ({ getStore, setStore }) => {
                     headers: { "Content-Type": "application/json" },
                     body: JSON.stringify(contactData),
                 })
-                .then(handleResponse)
-                .then(() => refreshContacts()) 
-                .catch((error) => console.error('Adding contact failed:', error));
+                    .then(handleResponse)
+                    .then(() => refreshContacts())
+                    .catch((error) => console.error('Adding contact failed:', error));
             },
 
             deleteContacts: (id) => {
                 fetch(`https://playground.4geeks.com/contact/agendas/yjlmotley/contacts/${id}`, {
                     method: "DELETE",
                 })
-                .then(handleResponse)
-                .then(() => {refreshContacts();}) 
-                .catch((error) => console.error('Deleting contact failed:', error));
+                    .then(handleResponse)
+                    .then(() => { refreshContacts(); })
+                    .catch((error) => console.error('Deleting contact failed:', error));
             },
 
             editContact: (id, contactData) => {
@@ -61,10 +74,12 @@ const getState = ({ getStore, setStore }) => {
                     headers: { "Content-Type": "application/json" },
                     body: JSON.stringify(contactData),
                 })
-                .then(handleResponse)
-                .then(() => refreshContacts()) 
-                .catch((error) => console.error('Editing contact failed:', error));
+                    .then(handleResponse)
+                    .then(() => refreshContacts())
+                    .catch((error) => console.error('Editing contact failed:', error));
             },
+
+            addAgendaSlug: addAgendaSlug
         },
     };
 };

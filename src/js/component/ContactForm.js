@@ -1,71 +1,69 @@
-// This file is not needed when using ContactForm component for routes "./addContact" and "/editContact/:id"
+// ContactForm.js
 import React, { useState, useEffect, useContext } from "react";
-import PropTypes from "prop-types";
-import { Link, useNavigate, useParams } from "react-router-dom";
 import { Context } from "../store/appContext";
+import { useNavigate, useParams } from "react-router-dom";
 
-
-export const EditContact = () => {
+const ContactForm = () => {
     const { store, actions } = useContext(Context);
     const navigate = useNavigate();
-    const params = useParams();
+    const { id } = useParams();
+    const isEdit = Boolean(id);
 
-    // This stores the current contact information
-    const [contact, setContact] = useState({
+    const [contactData, setContactData] = useState({
         name: "",
         email: "",
         address: "",
         phone: "",
     });
 
-    // Need this to run for when depedencies change
     useEffect(() => {
-        // This finds the contact in the store that matches the ID from the URL params
-        const contactData = store.contacts.find(
-            (c) => c.id === parseInt(params.id)
-        );
-
-        // If the contact is found, updates the local status with their info
-        if (contactData) {
-            setContact(contactData);
+        if (isEdit) {
+            const contact = store.contacts.find(c => c.id === parseInt(id));
+            if (contact) {
+                setContactData(contact);
+            }
         }
-    }, [params.id, store.contacts]);
+    }, [id, isEdit, store.contacts]);
 
-    // Event handler for input field changes
     const handleChange = (e) => {
-        setContact({ ...contact, [e.target.name]: e.target.value });
+        setContactData({ ...contactData, [e.target.name]: e.target.value });
     };
 
-    const handleSubmit = (e) => {
+    const handleSubmit = async (e) => {
         e.preventDefault();
-
-        // this calls the editContact with the contact id and info
-        actions.editContact(params.id, contact);
-
-        navigate("/");
+        try {
+            if (isEdit) {
+                await actions.editContact(id, contactData);
+            } else {
+                await actions.addContacts(contactData);
+            }
+            await actions.getContacts();
+            navigate("/");
+        } catch (error) {
+            console.error(isEdit ? "Error updating contact" : "Error adding contact", error);
+        }
     };
 
     const [isHovered, setIsHovered] = useState(false);
     const handleMouseOver = () => {
         setIsHovered(true);
     };
-
     const handleMouseOut = () => {
         setIsHovered(false);
     };
 
-    // To edit form
     return (
         <div className="container">
-            <h1 className="text-center mt-5">Update Contact</h1>
+            <h1 className="text-center mt-5">{isEdit ? "Update Contact" : "Add a New Contact"}</h1>
             <form onSubmit={handleSubmit} className="contact-form">
                 <div className="form-group mt-3">
-                    <label>Full Name</label>
+                    <label>Name</label>
                     <input
                         type="text"
                         name="name"
                         className="form-control"
-                        value={contact.name}
+                        placeholder="Name"
+                        value={contactData.name}
                         onChange={handleChange}
                         required
                     />
@@ -76,18 +74,8 @@ export const EditContact = () => {
                         type="email"
                         name="email"
                         className="form-control"
-                        value={contact.email}
-                        onChange={handleChange}
-                        required
-                    />
-                </div>
-                <div className="form-group mt-2">
-                    <label>Address</label>
-                    <input
-                        type="text"
-                        name="address"
-                        className="form-control"
-                        value={contact.address}
+                        placeholder="Enter email"
+                        value={contactData.email}
                         onChange={handleChange}
                         required
                     />
@@ -98,15 +86,28 @@ export const EditContact = () => {
                         type="text"
                         name="phone"
                         className="form-control"
-                        value={contact.phone}
+                        placeholder="Enter phone"
+                        value={contactData.phone}
+                        onChange={handleChange}
+                        required
+                    />
+                </div>
+                <div className="form-group mt-2">
+                    <label>Address</label>
+                    <input
+                        type="text"
+                        name="address"
+                        className="form-control"
+                        placeholder="Enter address"
+                        value={contactData.address}
                         onChange={handleChange}
                         required
                     />
                 </div>
                 <button
                     type="submit"
-                    className="btn btn-primary mt-4 form-control">
-                    {contact.id ? "Update Contact" : "save"}
+                    className="btn btn-primary form-control mt-4">
+                    {isEdit ? "Update Contact" : "Save"}
                 </button>
             </form>
             <a
@@ -124,10 +125,4 @@ export const EditContact = () => {
     );
 };
 
-// Props for the edit contact component
-EditContact.propTypes = {
-    match: PropTypes.object,
-};
-
-
-export default EditContact;
+export default ContactForm;
