@@ -18,6 +18,9 @@ export const Home = () => {
 				id="contacts"
 				className="panel-collapse collapse show mb-5"
 				aria-expanded="true">
+				{store.contacts.length === 0 ? (
+						<li className="list-group-item no-tasks">-- You currently do not have any contacts, please add a contact --</li>
+					) : (
 				<ul className="list-group pull-down" id="contact-list">
 					{store.contacts.map((contact, index) => (
 						<ContactCard
