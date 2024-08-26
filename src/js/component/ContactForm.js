@@ -5,9 +5,9 @@ import { useNavigate, useParams } from "react-router-dom";
 
 const ContactForm = () => {
     const { store, actions } = useContext(Context);
-    const navigate = useNavigate();
     const { id } = useParams();
     const isEdit = Boolean(id);
+    const navigate = useNavigate();
 
     const [contactData, setContactData] = useState({
         name: "",
@@ -77,7 +77,6 @@ const ContactForm = () => {
                         placeholder="Enter email"
                         value={contactData.email}
                         onChange={handleChange}
-                        required
                     />
                 </div>
                 <div className="form-group mt-2">
@@ -89,7 +88,6 @@ const ContactForm = () => {
                         placeholder="Enter phone"
                         value={contactData.phone}
                         onChange={handleChange}
-                        required
                     />
                 </div>
                 <div className="form-group mt-2">
@@ -101,7 +99,6 @@ const ContactForm = () => {
                         placeholder="Enter address"
                         value={contactData.address}
                         onChange={handleChange}
-                        required
                     />
                 </div>
                 <button

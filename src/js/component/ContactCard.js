@@ -1,7 +1,7 @@
 import React, { useContext, useState } from "react";
 import { Context } from "../store/appContext";
 import { Link } from "react-router-dom";
-import Modal from "./modal";
+import Modal from "./Modal";
 
 import exampleImage from "../../img/icons_user2-256.png";
 

@@ -1,6 +1,0 @@
-last checked for no bugs: 8.8.24
-
-
-What's different in this contact-card-project-v.2 versus the original is that it uses a conditional on the ContactForm instead of 2 separate addContact and editContact.
-
-It also has a addSlug function attached if your slug name has been erased without your knowledge on the 4Geeks API.

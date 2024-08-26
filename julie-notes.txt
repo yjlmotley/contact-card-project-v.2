@@ -1,0 +1,17 @@
+last checked for no bugs: 8.25.24
+
+The contact-card-project-v.2 uses a conditional for the Contact Form to add & edit contacts. The addContact.js and editContact.js still exists in this project for reference if you were to not use conditionals and add those components into index.js instead.
+For this project, you will need to edit (7 files):
+* flux.js 
+    - create a variable for the api url & the slug/user name
+    - add actions: getContacts, addContact, editContact, deleteContact, addUser
+* appContext.js (state.actions.getContacts(); in the useEffect)
+* ContactCard.js that will be used for each contact in the store that is mapped (w/ edit and delete buttons)
+* home.js to import your ContactCard
+* either ContactForm.js in the component folder OR 2 pages for add and editContact in the views folder 
+* layout.js (routing for adding and editing contact)
+* Modal.js (you can use this modal for handling deleting contacts in the ContactCard.js)
+
+It also has a addSlug function attached if your slug name has been erased without your knowledge on the 4Geeks API.
+
+* Only call the addUser if you get a specific response back that says your user is missing/not found??? or call the whole fetch actions and if you're username is not in the list, then go ahead and add it?

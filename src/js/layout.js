@@ -1,6 +1,6 @@
 import React from "react";
 import { BrowserRouter, Route, Routes, Link } from "react-router-dom";
-import ScrollToTop from "./component/scrollToTop";
+import ScrollToTop from "./component/ScrollToTop";
 
 import { Home } from "./views/home";
 import ContactForm from "./component/ContactForm";
@@ -18,11 +18,11 @@ const Layout = () => {
 						<Route path="/" element={<Home />} />
 						<Route path="/addContact" element={<ContactForm />} />
 						<Route path="/editContact/:id" element={<ContactForm />} />
-						<Route 
-							path="*" 
+						<Route
+							path="*"
 							element={
 								<React.Fragment>
-									<div style={{textAlign: 'center' }}>
+									<div style={{ textAlign: 'center' }}>
 										<h1>Not found!</h1>
 										<Link to="/">
 											<button className="btn btn-primary my-4">Back home</button>
